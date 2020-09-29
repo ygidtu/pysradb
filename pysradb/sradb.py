@@ -51,7 +51,7 @@ ASCP_CMD_PREFIX = "ascp -k1 -T -l 300m -P33001 -i"
 PY3_VERSION = sys.version_info.minor
 
 
-def _handle_download(record, use_ascp=False, pbar=None, ascp_bin=None, ascp_dir=None):
+def _handle_download(record, use_ascp=False, pbar=None, ascp_bin=None, ascp_dir=None, proxy=None):
     srp = record["study_accession"]
     srx = record["experiment_accession"]
     srr = record["run_accession"]
@@ -85,9 +85,9 @@ def _handle_download(record, use_ascp=False, pbar=None, ascp_bin=None, ascp_dir=
                 srr_location = os.path.join(srx_dir, srr + ".sra")
             else:
                 srr_location = os.path.join(srx_dir, download_filename)
-            download_file(srapath_url, srr_location)
+            download_file(srapath_url, srr_location, proxy=proxy)
         else:
-            download_file(download_url, srr_location)
+            download_file(download_url, srr_location, proxy=proxy)
     if pbar:
         pbar.update()
 
@@ -1277,6 +1277,7 @@ class SRAdb(BASEdb):
         ascp_bin=None,
         skip_confirmation=False,
         threads=1,
+        proxy=None
     ):
         """Download SRA files.
 
@@ -1375,6 +1376,7 @@ class SRAdb(BASEdb):
                 use_ascp=use_ascp,
                 ascp_bin=ascp_bin,
                 ascp_dir=ascp_dir,
+                proxy=proxy,
             ),
             df.to_dict("records"),
             max_workers=threads,

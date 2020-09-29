@@ -402,6 +402,7 @@ class SRAweb(SRAdb):
     ):
 
         esummary_result = self.get_esummary_response("sra", srp)
+    
         try:
             uids = esummary_result["uids"]
         except KeyError:
@@ -508,7 +509,7 @@ class SRAweb(SRAdb):
         metadata_df = pd.DataFrame(sra_record).drop_duplicates()
         if not detailed:
             return metadata_df
-
+ 
         time.sleep(self.sleep_time)
         efetch_result = self.get_efetch_response("sra", srp)
         if not isinstance(efetch_result, list):

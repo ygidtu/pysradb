@@ -107,7 +107,7 @@ def metadata(srp_id, db, assay, desc, detailed, expand, saveto):
 
 ################# download ##########################
 def download(
-    out_dir, db, srx, srp, skip_confirmation, col="sra_url", use_ascp=False, threads=1
+    out_dir, db, srx, srp, skip_confirmation, col="sra_url", use_ascp=False, threads=1, proxy=None
 ):
     db = _check_sradb_file(db)
     if out_dir is None:
@@ -152,6 +152,7 @@ def download(
                 skip_confirmation=skip_confirmation,
                 use_ascp=use_ascp,
                 threads=threads,
+                proxy=proxy
             )
     sradb.close()
 
@@ -610,6 +611,9 @@ def parse_args(args=None):
     subparser.add_argument(
         "--threads", "-t", help="Number of threads", default=1, type=int
     )
+    subparser.add_argument(
+        "--proxy", help="Proxy to use", default=None, type=str,
+    )
     subparser.set_defaults(func=download)
 
     subparser = subparsers.add_parser("search", help="Search SRA for matching text")
@@ -1067,6 +1071,7 @@ def parse_args(args=None):
             args.col,
             args.use_ascp,
             args.threads,
+            args.proxy,
         )
     elif args.command == "search":
         search(
